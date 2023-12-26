@@ -8,15 +8,14 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+
 @SpringBootApplication (exclude = {SecurityAutoConfiguration.class})
 public class Ciclo3Application {
 
-	@GetMapping("/hello")
+	/*@GetMapping("/hello")
 	public String hello(){
 		return "Hola saldremos vivos de esto";
-	}
-
+	}*/
 	@GetMapping("/test")
 	public String test(){
 		Empresa emp = new Empresa( "Solas SAS", "Calle 42", "12344", "1234567");
