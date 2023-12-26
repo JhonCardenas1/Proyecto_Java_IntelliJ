@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="Empresa")
+//Base de datos tipo objeto virtual
 public class Empresa {
 
     @Id
