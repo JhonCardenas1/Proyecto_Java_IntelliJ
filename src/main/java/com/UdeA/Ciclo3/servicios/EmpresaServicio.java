@@ -38,10 +38,11 @@ public class EmpresaServicio {
     //Metodo para eliminar empresas registradas teniendo el ID
     public boolean deleteEmpresa(Integer id){
         empresaRepositorio.deleteById(id);
-        if (getEmpresaById(id)!=null){
-            return false;
+
+        if (empresaRepositorio.findById(id)!=null){ // Verificacion del servicio eliminacion
+            return true;
         }
-        return true;
+        return false;
     }
 
 

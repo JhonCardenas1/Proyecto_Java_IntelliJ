@@ -17,10 +17,11 @@ public class Controlador {
     EmpresaServicio empresaServicio;
 
     @GetMapping({"/","/verEmpresas"})
-    public String verEmpresas(Model model){
+    public String verEmpresas(Model model, @ModelAttribute("mensaje") String mensaje){
         List<Empresa> listaEmpresas=empresaServicio.getAllEmpresas();
         model.addAttribute("emplist", listaEmpresas);
-        return "verEmpresas";
+        model.addAttribute("mensaje", mensaje);
+        return "verEmpresas"; //Lamarmos al HTML
     }
 
     @GetMapping("/AgregarEmpresa")
@@ -33,37 +34,51 @@ public class Controlador {
     @PostMapping("/GuardarEmpresa")
     public String guardarEmpresa(Empresa emp, RedirectAttributes redirectAttributes){
         if(empresaServicio.saveOrUpdateEmpresa(emp)==true){
+            redirectAttributes.addFlashAttribute("mensaje", "saveOK");
             return "redirect:/verEmpresas";
         }
+        redirectAttributes.addFlashAttribute("mensaje", "saveError");
         return "redirect:/AgregarEmpresa";
 
     }
 
     @GetMapping("/EditarEmpresa/{id}")
-    public String editarEmpresa(Model model, @PathVariable Integer id){
+    public String editarEmpresa(Model model, @PathVariable Integer id, @ModelAttribute("mensaje") String mensaje){
         Empresa emp = empresaServicio.getEmpresaById(id);
         model.addAttribute("emp", emp);
+        model.addAttribute("mensaje", mensaje);
         return "editarEmpresa";
     }
 
     @PostMapping("/ActualizarEmpresa")
-    public String updateEmpresa(@ModelAttribute("emp") Empresa emp){
+    public String updateEmpresa(@ModelAttribute("emp") Empresa emp, RedirectAttributes redirectAttributes){
         if(empresaServicio.saveOrUpdateEmpresa(emp)==true){
+            redirectAttributes.addFlashAttribute("mensaje", "updateOK");
             return "redirect:/verEmpresas";
         }
+        redirectAttributes.addFlashAttribute("mensaje", "updateError");
         return "redirect:/EditarEmpresa";
     }
 
     @GetMapping("/EliminarEmpresa/{id}")
-        public String eliminarEmpresa(@PathVariable Integer id){
+        public String eliminarEmpresa(@PathVariable Integer id, RedirectAttributes redirectAttributes){
 
-        try{
+            if (empresaServicio.deleteEmpresa(id)==true){
+                redirectAttributes.addFlashAttribute("mensaje", "deleteOK");
+                return "redirect:/verEmpresas";
+        }
+        redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+        return "redirect:/verEmpresas";
+
+        /*try{
             empresaServicio.deleteEmpresa(id);
         }
         catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "deleteError");
             return "redirect:/verEmpresas";
         }
-        return "redirect:/verEmpresas";
+        redirectAttributes.addFlashAttribute("mensaje", "deleteOK");
+        return "redirect:/verEmpresas";*/
 
     }
 

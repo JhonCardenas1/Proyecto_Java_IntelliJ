@@ -16,14 +16,14 @@ public class Ciclo3Application {
 	public String hello(){
 		return "Hola saldremos vivos de esto";
 	}*/
-	@GetMapping("/test")
+	/*@GetMapping("/test")
 	public String test(){
 		Empresa emp = new Empresa( "Solas SAS", "Calle 42", "12344", "1234567");
 
 		emp.setNombre("Solar LTDA");
 		//System.out.println("Hasta aqui vamos bien");
 		return emp.getNombre();
-	}
+	}*/
 
 	public static void main(String[] args) {
 		SpringApplication.run(Ciclo3Application.class, args);
