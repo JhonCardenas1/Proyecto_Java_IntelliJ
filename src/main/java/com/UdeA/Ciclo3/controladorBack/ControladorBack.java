@@ -1,17 +1,25 @@
 package com.UdeA.Ciclo3.controladorBack;
 
+import com.UdeA.Ciclo3.modelos.Empleado;
 import com.UdeA.Ciclo3.modelos.Empresa;
+import com.UdeA.Ciclo3.serviciosBack.EmpleadoServicioBack;
 import com.UdeA.Ciclo3.serviciosBack.EmpresaServicioBack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ControladorBack {
 
+    //EMPRESAS
+
     @Autowired
     EmpresaServicioBack empresaServicioBack;
+    @Autowired
+    EmpleadoServicioBack empleadoServicioBack;
 
     @GetMapping("/enterprises") // Ver json de todas las empresas
     public List<Empresa> verEmpresas(){
@@ -50,4 +58,29 @@ public class ControladorBack {
             return "No elimino la empresa con id"+ id;
         }
     }
+
+
+    //EMPLEADOS
+
+    @GetMapping("/empleados") // Ver json de todos los empleados
+    public List<Empleado> verEmpleado(){
+        return empleadoServicioBack.getAllEmpleado();
+    }
+    @PostMapping("/empleados")
+    public Optional<Empleado> guardarEmpleado(@RequestBody Empleado empl){
+        return Optional.ofNullable(this.empleadoServicioBack.saveOrUpdateEmpleado(empl));
+    }
+
+    @GetMapping(path ="empleados/{id}")
+    public Optional<Empleado> empleadoPorID(@PathVariable Integer id){
+        return this.empleadoServicioBack.getEmpleadoById(id);
+    }
+
+    @GetMapping("/enterprises/{id}/empleados") //Consultar empleados por empresas
+    public ArrayList<Empleado> EmpleadoPorEmpresa(@PathVariable("id") Integer id){
+        return this.empleadoServicioBack.obtenerPorEmpresa(id);
+    }
+
+
+
 }
