@@ -81,6 +81,24 @@ public class ControladorBack {
         return this.empleadoServicioBack.obtenerPorEmpresa(id);
     }
 
+    @PatchMapping("/empleados/{id}")
+    public Empleado actualizarEmpleado(@PathVariable("id") Integer id, @RequestBody Empleado empleado){
+        Empleado empl = empleadoServicioBack.getEmpleadoById(id).get();
+        empl.setNombre(empleado.getNombre());
+        empl.setCorreo(empleado.getCorreo());
+        empl.setEmpresa(empleado.getEmpresa());
+        empl.setRol(empleado.getRol());
 
+        return empleadoServicioBack.saveOrUpdateEmpleado(empl);
+    }
 
+    @DeleteMapping("/empleados/{id}") //Mentodo para eliminar empleado por id
+    public String eliminarEmpleadoID(@PathVariable("id") Integer id){
+        boolean respuesta = empleadoServicioBack.deleteEmpleado(id); //Eliminamos usando el servicio del nuestro service
+        if(respuesta){ //Si la respuesta booleana es true, si se elimino
+            return "Se pudo eliminar correctamente el empleado con el id "+id;
+        }
+        //Si la respuesta boolenana es falsa, no se elimino
+        return "No se pudo eliminar correctamente el empleado con id "+id;
+    }
 }
