@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class Empleado {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//(strategy = GenerationType.AUTO)
     private int id;
     private String nombre;
     private String correo;

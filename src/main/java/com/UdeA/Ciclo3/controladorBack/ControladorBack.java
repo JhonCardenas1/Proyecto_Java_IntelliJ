@@ -52,7 +52,6 @@ public class ControladorBack {
         return empresaServicioBack.saveOrUpdateEmpresa(emp);
 
     }
-
     @DeleteMapping(path = "enterprises/{id}")
     public String eliminarEmpresaID(@PathVariable("id") Integer id){
         boolean respuesta = this.empresaServicioBack.deleteEmpresa(id);
@@ -144,5 +143,18 @@ public class ControladorBack {
         //Si la respuesta boolenana es falsa, no se elimino
         return "No se pudo eliminar correctamente el movimiento con id "+id;
     }
+
+    @GetMapping("/empleados/{id}/movimientos") //Consultar movimientos por el id del empleado
+    public ArrayList<MovimientoDinero> movimientosPorEmpleados(@PathVariable("id") Integer id){
+        return movimientosServicioBack.obtenerPorEmpleado(id);
+
+    }
+
+    @GetMapping("/enterprises/{id}/movimientos")//Consultar movimientos que pertenecesn a una empresa por el id de la empresa
+    public ArrayList<MovimientoDinero> movimientosPorEmpresa(@PathVariable("id") Integer id){
+        return movimientosServicioBack.obtenerporEmpresa(id);
+    }
+
+
 
 }

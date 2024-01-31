@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class MovimientoDinero {
 
     @Id //Id unico y ordinal por "tabla"
-    @GeneratedValue(strategy = GenerationType.AUTO)//(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//(strategy = GenerationType.AUTO)
     //@Column(columnDefinition = "serial")
     private int id;
     private long monto;
