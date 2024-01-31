@@ -41,7 +41,7 @@ public class MovimientosServicioBack {
         return true; //Si al buscar el movimiento no lo encontramos, si se elimino
     }
 
-    public ArrayList<MovimientoDinero> obtenerPorEmpleado(Integer id){ // Obtener teniendo en cuentael id del empleado
+    public ArrayList<MovimientoDinero> obtenerPorEmpleado(Integer id){ // Obtener teniendo en cuenta el id del empleado
         return movimientosRepositorio.findByEmpleado(id);
     }
 
