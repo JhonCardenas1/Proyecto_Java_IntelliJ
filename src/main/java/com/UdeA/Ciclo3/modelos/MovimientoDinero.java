@@ -6,13 +6,14 @@ import jakarta.persistence.*;
 @Table(name="Movimientos")
 public class MovimientoDinero {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id //Id unico y ordinal por "tabla"
+    @GeneratedValue(strategy = GenerationType.AUTO)//(strategy = GenerationType.IDENTITY)
+    //@Column(columnDefinition = "serial")
     private int id;
     private long monto;
     private String concepto;
     @ManyToOne
-    @JoinColumn(name="Empleado_id")
+    @JoinColumn(name="empleado_id")
     private Empleado usuario;
 
     public MovimientoDinero() {

@@ -2,8 +2,10 @@ package com.UdeA.Ciclo3.controladorBack;
 
 import com.UdeA.Ciclo3.modelos.Empleado;
 import com.UdeA.Ciclo3.modelos.Empresa;
+import com.UdeA.Ciclo3.modelos.MovimientoDinero;
 import com.UdeA.Ciclo3.serviciosBack.EmpleadoServicioBack;
 import com.UdeA.Ciclo3.serviciosBack.EmpresaServicioBack;
+import com.UdeA.Ciclo3.serviciosBack.MovimientosServicioBack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,9 @@ public class ControladorBack {
     EmpresaServicioBack empresaServicioBack;
     @Autowired
     EmpleadoServicioBack empleadoServicioBack;
+
+    @Autowired
+    MovimientosServicioBack movimientosServicioBack;
 
     @GetMapping("/enterprises") // Ver json de todas las empresas
     public List<Empresa> verEmpresas(){
@@ -101,4 +106,43 @@ public class ControladorBack {
         //Si la respuesta boolenana es falsa, no se elimino
         return "No se pudo eliminar correctamente el empleado con id "+id;
     }
+
+    //MOVIMIENTOS DE DINERO
+
+    @GetMapping("/movimientos") //Consultar todos los movimientos
+        public List<MovimientoDinero> verMovimientos() {
+        return movimientosServicioBack.getAllMovimientos();
+    }
+
+    @PostMapping("/movimientos")
+    public MovimientoDinero guardarmovimientos(@RequestBody MovimientoDinero movimiento){
+        return movimientosServicioBack.saveOrUpdateMovimiento(movimiento);
+
+    }
+
+    @GetMapping("/movimientos/{id}")
+    public MovimientoDinero movimientoPorId(@PathVariable("id") Integer id){
+        return movimientosServicioBack.getMovimientoById(id);
+    }
+
+    @PatchMapping("/movimientos/{id}")
+    public MovimientoDinero actualizarMovimientoPorId(@PathVariable("id") Integer id, @RequestBody MovimientoDinero movimiento){
+        MovimientoDinero mov = movimientosServicioBack.getMovimientoById(id);
+        mov.setConcepto(movimiento.getConcepto());
+        mov.setMonto(movimiento.getMonto());
+        mov.setUsuario(movimiento.getUsuario());
+        return movimientosServicioBack.saveOrUpdateMovimiento(mov);
+
+    }
+
+    @DeleteMapping("/movimientos/{id}") //Metodo para eliminar movimientos por id
+    public String eliminarMovimientoId(@PathVariable("id") Integer id){
+        boolean respuesta = movimientosServicioBack.deleteMovimiento(id); //Eliminamos usando el servicio del nuestro service
+        if(respuesta){ //Si la respuesta booleana es true, si se elimino
+            return "Se pudo eliminar correctamente el movimientos con el id "+id;
+        }
+        //Si la respuesta boolenana es falsa, no se elimino
+        return "No se pudo eliminar correctamente el movimiento con id "+id;
+    }
+
 }
