@@ -2,6 +2,7 @@ package com.UdeA.Ciclo3.servicios;
 
 
 import com.UdeA.Ciclo3.modelos.Empleado;
+import com.UdeA.Ciclo3.modelos.Empresa;
 import com.UdeA.Ciclo3.repositorio.EmpleadoRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,25 @@ public class EmpleadoServicio {
         return empleadoRepositorio.findById(id);
     }
 
-    //Metodo para guardar o actualizar registros de empeleados
-    public Empleado saveOrUpdateEmpleado(Empleado empleado){
-        return empleadoRepositorio.save(empleado);
+    //Metodo para buscar empleador por empresa
+    public ArrayList<Empleado> obtenerPorEmpresa(Integer id){
+        return empleadoRepositorio.findByEmpresa(id);
     }
+
+    //Metodo para guardar o actualizar registros de empeleados
+    public boolean saveOrUpdateEmpleado(Empleado empl){
+        Empleado emp= empleadoRepositorio.save(empl);
+        if (empleadoRepositorio.findById(emp.getId())!=null){
+            return true;
+        }
+        return false;
+    }
+
+    //Metodo para guardar o actualizar registros de empeleados
+    /*public Empleado saveOrUpdateEmpleado(Empleado empleado){
+
+        return empleadoRepositorio.save(empleado);
+    }*/
 
     //Metodo para eliminar un registro de un empleado por id
     public boolean deleteEmpleado(Integer id){
@@ -45,6 +61,5 @@ public class EmpleadoServicio {
             return true;
         }
         return false;*/
-
     }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Agregar nueva empresa</title>
+    <title>Lista de empleados</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -22,59 +22,58 @@
 <body>
 
 <div class="container">
-    <h1> Lista de empresas</h1>
+    <h1> Lista de Empleados</h1>
     <!--Dibujamos la tabla-->
     <br><table class="table table-bordered">
         <tr>
             <th>ID</th>
             <th>Nombre</th>
-            <th>Dirección</th>
-            <th>Telefono</th>
-            <th>NIT</th>
-            <th>Empleados</th>
+            <th>Correo</th>
+            <th>Empresa</th>
+            <th>Rol</th>
             <th>Editar</th>
             <th>Eliminar</th>
         </tr>
 
         <!--Llenamos la tabla-->
-        <!--En nuestro controlador, creamos en verempresas un modelo con un atributo llamado emplist donde esta la lista de todas las empresas-->
-        <tr th:each="empresa : ${emplist}">
-            <td th:text="${empresa.id}"></td>
-            <td th:text="${empresa.nombre}"></td>
-            <td th:text="${empresa.direccion}"></td>
-            <td th:text="${empresa.telefono}"></td>
-            <td th:text="${empresa.NIT}"></td>
-            <td><button type="button" class="btn btn-info"><a th:href="@{/Empresa/{id}/Empleados(id=${empresa.id})}">Ver</a></button></td>
-            <td><button type="button" class="btn btn-warning"><a th:href="@{/EditarEmpresa/{id}(id=${empresa.id})}">Editar</a></button></td>
-            <td><button type="button" class="btn btn-danger"><a th:href="@{/EliminarEmpresa/{id}(id=${empresa.id})}">Eliminar</a></button></td>
+        <!--En nuestro controlador, creamos en verempleados un modelo con un atributo llamado emplelist donde esta la lista de todas los empleados-->
+        <tr th:each="empleado : ${emplelist}">
+            <td th:text="${empleado.id}"></td>
+            <td th:text="${empleado.nombre}"></td>
+            <td th:text="${empleado.correo}"></td>
+            <td th:text="${empleado.empresa.nombre}"></td>
+            <td th:if="${empleado.rol=='1'}">Administrativo</td>
+            <td th:if="${empleado.rol=='2'}">Operativo</td>
+            <td><button type="button" class="btn btn-warning"><a th:href="@{/EditarEmpleado/{id}(id=${empleado.id})}">Editar</a></button></td>
+            <td><button type="button" class="btn btn-danger"><a th:href="@{/EliminarEmpleado/{id}(id=${empleado.id})}">Eliminar</a></button></td>
         </tr>
     </table>
 
-    <!--Crear boton para agregar una empresa nueva-->
+    <!--Crear boton para agregar un empleado nuevo-->
 
-    <button type="button" class="btn btn-info"><a th:href="@{/AgregarEmpresa}">Agregar Nueva Empresa</a></button>
+    <button type="button" class="btn btn-info"><a th:href="@{/AgregarEmpleado}">Agregar Nuevo Empleado</a></button>
     <br><br>
-    <button type="button" class="btn btn-primary"><a th:href="@{/verEmpleados}">Ver lista de Empleados</a></button>
+    <!--Crear boton que lleva a la lista de empresas-->
+    <button type="button" class="btn btn-primary"><a th:href="@{/verEmpresas}">Ver lista de Empresas</a></button>
 </div>
-
 <script th:inline="javascript">
     window.onload=function(){
         var msg = [[${mensaje}]];
 
         if (msg == "saveOK"){
-            Command: toastr["success"]("Empresa creada con éxito!")
+            Command: toastr["success"]("Empleado creado con éxito!")
         }
 
         else if (msg == "updateOK"){
-            Command: toastr["success"]("Empresa actualizada con éxito!")
+            Command: toastr["success"]("Empleado actualizado con éxito!")
         }
 
         else if (msg == "deleteOK"){
-            Command: toastr["error"]("Empresa eliminada con éxito!")
+            Command: toastr["error"]("Registro de empleado eliminado con éxito!")
         }
 
         else if (msg == "deleteError"){
-            Command: toastr["error"]("Empresa no ha sido eliminada!")
+            Command: toastr["error"]("Registro de empleado no ha sido eliminada!")
         }
 
         toadtr.options={
