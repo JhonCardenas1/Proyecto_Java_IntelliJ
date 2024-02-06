@@ -2,8 +2,10 @@ package com.UdeA.Ciclo3.controladores;
 
 import com.UdeA.Ciclo3.modelos.Empleado;
 import com.UdeA.Ciclo3.modelos.Empresa;
+import com.UdeA.Ciclo3.modelos.MovimientoDinero;
 import com.UdeA.Ciclo3.servicios.EmpleadoServicio;
 import com.UdeA.Ciclo3.servicios.EmpresaServicio;
+import com.UdeA.Ciclo3.servicios.MovimientosServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,8 @@ public class Controlador {
     EmpresaServicio empresaServicio;
     @Autowired
     EmpleadoServicio empleadoServicio;
+    @Autowired
+    MovimientosServicio movimientosServicio;
 
     //EMPRESAS
 
@@ -152,5 +156,18 @@ public class Controlador {
         model.addAttribute("emplelist", listaEmpleados);
         return "verEmpleados"; //Llmamos al html con el emplelist de los empleados filtrados
     }
+
+
+    //Movimientos de dinero
+
+    @GetMapping("/verMovimientos")
+    public String verMovimientos(Model model, @ModelAttribute("mensaje") String mensaje){
+        List<MovimientoDinero> listaMovimientos=movimientosServicio.getAllMovimientos();
+        model.addAttribute("movlist", listaMovimientos);
+        model.addAttribute("mensaje", mensaje);
+        return "verMovimientos"; //LLamamos al HTML
+    }
+
+
 
 }
