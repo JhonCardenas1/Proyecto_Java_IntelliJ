@@ -1,6 +1,7 @@
 package com.UdeA.Ciclo3.servicios;
 
 
+import com.UdeA.Ciclo3.modelos.Empleado;
 import com.UdeA.Ciclo3.modelos.MovimientoDinero;
 import com.UdeA.Ciclo3.repositorio.MovimientosRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,14 @@ public class MovimientosServicio {
     }
 
     //Metodo para guardar o actualizar objeto de tipo empresa
-    public MovimientoDinero saveOrUpdateMovimiento(MovimientoDinero movimientoDinero){
-        MovimientoDinero mov = movimientosRepositorio.save(movimientoDinero);
-        return mov;
+    public boolean saveOrUpdateMovimiento(MovimientoDinero movimientoDinero){
+        //MovimientoDinero mov = movimientosRepositorio.save(movimientoDinero);
+        //return mov;
+        MovimientoDinero mov= movimientosRepositorio.save(movimientoDinero);
+        if (movimientosRepositorio.findById(mov.getId())!=null){
+            return true;
+        }
+        return false;
     }
 
     //Metodo para eliminar un registro de un empleado por id

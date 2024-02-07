@@ -64,7 +64,7 @@ public class Controlador {
             return "redirect:/verEmpresas";
         }
         redirectAttributes.addFlashAttribute("mensaje", "updateError");
-        return "redirect:/EditarEmpresa";
+        return "redirect:/EditarEmpresa/"+emp.getId();
     }
     @GetMapping("/EliminarEmpresa/{id}")
         public String eliminarEmpresa(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
@@ -136,7 +136,7 @@ public class Controlador {
             return "redirect:/verEmpleados";
         }
         redirectAttributes.addFlashAttribute("mensaje", "updateError");
-        return "redirect:/EditarEmpleados";
+        return "redirect:/EditarEmpleados/"+empl.getId();
     }
 
     @GetMapping("/EliminarEmpleado/{id}")
@@ -154,7 +154,7 @@ public class Controlador {
     public String verEmpleadosPorEmpresas(@PathVariable("id") Integer id, Model model){
         List<Empleado> listaEmpleados =empleadoServicio.obtenerPorEmpresa(id);
         model.addAttribute("emplelist", listaEmpleados);
-        return "verEmpleados"; //Llmamos al html con el emplelist de los empleados filtrados
+        return "verEmpleados"; //Llamamos al html con el emplelist de los empleados filtrados
     }
 
 
@@ -162,12 +162,77 @@ public class Controlador {
 
     @GetMapping("/verMovimientos")
     public String verMovimientos(Model model, @ModelAttribute("mensaje") String mensaje){
-        List<MovimientoDinero> listaMovimientos=movimientosServicio.getAllMovimientos();
+        List<MovimientoDinero> listaMovimientos = movimientosServicio.getAllMovimientos();
         model.addAttribute("movlist", listaMovimientos);
         model.addAttribute("mensaje", mensaje);
         return "verMovimientos"; //LLamamos al HTML
     }
 
+    @GetMapping("/AgregarMovimiento")
+    public String nuevoMovimiento(Model model, @ModelAttribute("mensaje") String mensaje) {
+        MovimientoDinero movimiento = new MovimientoDinero();
+        model.addAttribute("mov", movimiento);
+        model.addAttribute("mensaje",mensaje);
+        List<Empleado> listaEmpleados = empleadoServicio.getAllEmpleado();
+        model.addAttribute("emplelist", listaEmpleados);
+        return "agregarMovimiento"; //Lamar al HTML
+    }
+
+    @PostMapping("/GuardarMovimiento")
+    public String guardarMovimiento(MovimientoDinero mov, RedirectAttributes redirectAttributes){
+        if(movimientosServicio.saveOrUpdateMovimiento(mov)==true){
+            redirectAttributes.addFlashAttribute("mensaje", "saveOK");
+            return "redirect:/verMovimientos";
+        }
+        redirectAttributes.addFlashAttribute("mensaje", "saveError");
+        return "redirect:/AgregarMovimiento";
+    }
+
+    @GetMapping("/EditarMovimiento/{id}")
+    public String editarMovimiento(Model model, @PathVariable Integer id, @ModelAttribute("mensaje") String mensaje){
+        MovimientoDinero mov = movimientosServicio.getMovimientoById(id);
+        model.addAttribute("mov", mov);
+        model.addAttribute("mensaje", mensaje);
+
+        List<Empleado> listaEmpleados = empleadoServicio.getAllEmpleado();
+        model.addAttribute("emplelist", listaEmpleados);
+        return "editarMovimiento";
+    }
+
+    @PostMapping("/ActualizarMovimiento")
+    public String updateMovimiento(@ModelAttribute("mov") MovimientoDinero mov, RedirectAttributes redirectAttributes){
+        if(movimientosServicio.saveOrUpdateMovimiento(mov)==true){
+            redirectAttributes.addFlashAttribute("mensaje", "updateOK");
+            return "redirect:/verMovimientos";
+        }
+        redirectAttributes.addFlashAttribute("mensaje", "updateError");
+        return "redirect:/EditarMovimiento/"+mov.getId();
+    }
+
+    @GetMapping("/EliminarMovimiento/{id}")
+    public String eliminarMovimiento(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+
+        if (movimientosServicio.deleteMovimiento(id) == true) {
+            redirectAttributes.addFlashAttribute("mensaje", "deleteOK");
+            return "redirect:/verMovimientos";
+        }
+        redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+        return "redirect:/verMovimientos";
+    }
+
+    @GetMapping("/Empleado/{id}/Movimientos") //Filtro de movimientos por empléados
+    public String movimientosPorEmpleado(@PathVariable("id") Integer id, Model model){
+        List<MovimientoDinero> movList = movimientosServicio.obtenerPorEmpleado(id);
+        model.addAttribute("movlist",movList);
+        return "verMovimientos"; //Llamamos al HTML
+    }
+
+    @GetMapping("/Empresa/{id}/Movimientos") //Filtro para obtener movimientos por empresas
+    public String movimientosPorEmpresas(@PathVariable("id") Integer id, Model model){
+        List<MovimientoDinero> movList = movimientosServicio.obtenerporEmpresa(id);
+        model.addAttribute("movlist",movList);
+        return "verMovimientos";
+    }
 
 
 }
