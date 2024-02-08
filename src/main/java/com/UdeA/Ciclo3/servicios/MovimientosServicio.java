@@ -56,4 +56,23 @@ public class MovimientosServicio {
         return  movimientosRepositorio.findByEmpresa(id);
     }
 
+    //Servicio para ver la suma de todos los montos
+    public Long obtenerSumaMontos(){
+        return movimientosRepositorio.SumarMonto();
+    }
+
+    //Servicio para ver la suma de todos los montos por empleado
+    public Long MontosPorEmpleado(Integer id){
+        return movimientosRepositorio.MontosPorEmpleado(id);
+    }
+
+    //Servicio para ver la suma de todos los montos por empresa
+    public Long MontosPorEmpresa(Integer id){
+        return movimientosRepositorio.MontosPorEmpresa(id);
+    }
+
+
+
+
+
 }
