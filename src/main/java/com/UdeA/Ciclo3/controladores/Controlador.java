@@ -3,10 +3,13 @@ package com.UdeA.Ciclo3.controladores;
 import com.UdeA.Ciclo3.modelos.Empleado;
 import com.UdeA.Ciclo3.modelos.Empresa;
 import com.UdeA.Ciclo3.modelos.MovimientoDinero;
+import com.UdeA.Ciclo3.repositorio.MovimientosRepositorio;
 import com.UdeA.Ciclo3.servicios.EmpleadoServicio;
 import com.UdeA.Ciclo3.servicios.EmpresaServicio;
 import com.UdeA.Ciclo3.servicios.MovimientosServicio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,9 @@ public class Controlador {
     EmpleadoServicio empleadoServicio;
     @Autowired
     MovimientosServicio movimientosServicio;
+
+    @Autowired
+    MovimientosRepositorio movimientosRepositorio;
 
     //EMPRESAS
 
@@ -161,14 +167,21 @@ public class Controlador {
     //Movimientos de dinero
 
     @GetMapping("/verMovimientos")
-    public String verMovimientos(Model model, @ModelAttribute("mensaje") String mensaje){
-        List<MovimientoDinero> listaMovimientos = movimientosServicio.getAllMovimientos();
-        model.addAttribute("movlist", listaMovimientos);
+    public String verMovimientos(@RequestParam(value="pagina", required=false, defaultValue = "0") int NumeroPagina,
+                                 @RequestParam(value="medida", required=false, defaultValue = "30") int medida,
+                                 Model model, @ModelAttribute("mensaje") String mensaje){
+        Page<MovimientoDinero> paginaMovimientos= movimientosRepositorio.findAll(PageRequest.of(NumeroPagina,medida));
+        //List<MovimientoDinero> listaMovimientos = movimientosServicio.getAllMovimientos();
+        model.addAttribute("movlist",paginaMovimientos.getContent());
+        //model.addAttribute("movlist",listaMovimientos);
+        model.addAttribute("paginas",new int[paginaMovimientos.getTotalPages()]);
+        model.addAttribute("paginaActual", NumeroPagina);
         model.addAttribute("mensaje", mensaje);
         Long sumamonto = movimientosServicio.obtenerSumaMontos();
         model.addAttribute("SumaMontos", sumamonto); //Enviamos la suma de todos los montos a a platilla HTML
         return "verMovimientos"; //LLamamos al HTML
     }
+
 
     @GetMapping("/AgregarMovimiento")
     public String nuevoMovimiento(Model model, @ModelAttribute("mensaje") String mensaje) {
