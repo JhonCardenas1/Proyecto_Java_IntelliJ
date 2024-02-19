@@ -8,8 +8,11 @@ import com.UdeA.Ciclo3.servicios.EmpleadoServicio;
 import com.UdeA.Ciclo3.servicios.EmpresaServicio;
 import com.UdeA.Ciclo3.servicios.MovimientosServicio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -116,6 +119,8 @@ public class Controlador {
 
     @PostMapping("/GuardarEmpleado")
     public String guardarEmpleado(Empleado empl, RedirectAttributes redirectAttributes){
+        String passEncriptada = passwordEncoder().encode(empl.getPassword());
+        empl.setPassword(passEncriptada);
         if(empleadoServicio.saveOrUpdateEmpleado(empl)==true){
             redirectAttributes.addFlashAttribute("mensaje", "saveOK");
             return "redirect:/verEmpleados";
@@ -137,6 +142,8 @@ public class Controlador {
 
     @PostMapping("/ActualizarEmpleado")
     public String updateEmpleado(@ModelAttribute("empl") Empleado empl, RedirectAttributes redirectAttributes){
+        String passEncriptada = passwordEncoder().encode(empl.getPassword());
+        empl.setPassword(passEncriptada);
         if(empleadoServicio.saveOrUpdateEmpleado(empl)==true){
             redirectAttributes.addFlashAttribute("mensaje", "updateOK");
             return "redirect:/verEmpleados";
@@ -253,5 +260,10 @@ public class Controlador {
         return "verMovimientos";
     }
 
+    //Metodo para encriptar contraseñas
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
 }
