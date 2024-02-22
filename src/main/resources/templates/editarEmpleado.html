@@ -84,7 +84,7 @@
             <div class="form-group col-md-12">
                 <label class="col-md-3" for="password">Contraseña del empleado:</label>
                 <div class="col-md-6">
-                    <input type="password" th:field="*{password}" class="form-control" id="password"></div>
+                    <input type="text" th:field="*{password}" class="form-control" id="password"></div>
             </div>
         </div>
 
@@ -114,5 +114,12 @@
     <a href="javascript: history.go(-1)" class="btn btn-info" role="button">Atras</a>
 
 </div>
+
+<!-- Script para editar la contraseña -->
+<script th:inline="javascript">
+  window.onload=function(){
+  document.getElementById("password").type="password"}
+</script>
+
 </body>
 </html>

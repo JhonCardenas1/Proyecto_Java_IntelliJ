@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -142,8 +144,14 @@ public class Controlador {
 
     @PostMapping("/ActualizarEmpleado")
     public String updateEmpleado(@ModelAttribute("empl") Empleado empl, RedirectAttributes redirectAttributes){
-        String passEncriptada = passwordEncoder().encode(empl.getPassword());
-        empl.setPassword(passEncriptada);
+        Integer id = empl.getId(); //Sacamos el id del objeto empleado
+        String Oldpass = empleadoServicio.getEmpleadoById(id).get().getPassword(); //Con este id consultamos la contraseña que ya esta en la base de datos
+        //System.out.println(Oldpass);
+        //System.out.println(empl.getPassword());
+        if (!empl.getPassword().equals(Oldpass)){
+            String passEncriptada = passwordEncoder().encode(empl.getPassword());
+            empl.setPassword(passEncriptada);
+        }
         if(empleadoServicio.saveOrUpdateEmpleado(empl)==true){
             redirectAttributes.addFlashAttribute("mensaje", "updateOK");
             return "redirect:/verEmpleados";
@@ -196,7 +204,11 @@ public class Controlador {
         model.addAttribute("mov", movimiento);
         model.addAttribute("mensaje",mensaje);
         List<Empleado> listaEmpleados = empleadoServicio.getAllEmpleado();
+        /*Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String correo = auth.getName();
+        Integer idEmpleado = movimientosServicio.IdPorCorreo(correo);*/
         model.addAttribute("emplelist", listaEmpleados);
+        //model.addAttribute("IdEmpleado", idEmpleado);
         return "agregarMovimiento"; //Lamar al HTML
     }
 
@@ -258,6 +270,12 @@ public class Controlador {
         Long sumamonto = movimientosServicio.MontosPorEmpresa(id);
         model.addAttribute("SumaMontos", sumamonto); //Enviamos la suma de todos los montos a a platilla HTML
         return "verMovimientos";
+    }
+
+    //Controlador que me lleva al template de Noautorizado
+    @RequestMapping(value = "/Denegado")
+    public String accessDenegado (){
+        return "accessDenied";
     }
 
     //Metodo para encriptar contraseñas

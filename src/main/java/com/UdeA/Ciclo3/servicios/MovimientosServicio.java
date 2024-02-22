@@ -71,8 +71,9 @@ public class MovimientosServicio {
         return movimientosRepositorio.MontosPorEmpresa(id);
     }
 
-
-
-
+    //Servicio que nos deja conseguir el id de un empleado si tenemos su correo
+    public Integer IdPorCorreo(String Correo){
+        return movimientosRepositorio.IdPorCorreo(Correo);
+    }
 
 }
